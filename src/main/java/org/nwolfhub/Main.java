@@ -21,7 +21,7 @@ public class Main {
         frame.setTitle("Nwolfhub notes");
         frame.setContentPane(notesWindow);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 800);
+        frame.setSize(700, 550);
         frame.setVisible(true);
     }
 }
