@@ -12,6 +12,7 @@ import org.nwolfhub.utils.Utils;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -44,29 +45,29 @@ public class Main {
         FlexableValue dateValue = new FlexableValue() {
             @Override
             public String call() {
-                return  new SimpleDateFormat("(dd) hh:mm:ss").format (((Date) meta).getTime());
+                return new SimpleDateFormat("(dd) hh:mm:ss").format(((Date) meta).getTime());
             }
         };
         dateValue.setMeta(new Date());
         Template loggingTemplate = new Template().setName("logger").setPrefix("[{time}] ").addVariable(new Variable("{time}", dateValue)).setPostfix("\n");
         cli.addTemplate(loggingTemplate);
         File configDir = new File(System.getProperty("user.home") + "/.config/");
-        if(!configDir.isDirectory()) {
+        if (!configDir.isDirectory()) {
             cli.print("Users config folder is missing! Creating new one. Are you a windows user? >:(");
             configDir.mkdirs();
         }
         configDir = new File(System.getProperty("user.home") + "/.config/nwolfhubNotes/");
-        if(!configDir.exists()) {
+        if (!configDir.exists()) {
             cli.print("Creating notes config dir");
             configDir.mkdirs();
         }
         File config = new File(System.getProperty("user.home") + "/.config/nwolfhubNotes/config.cfg");
-        if(!config.exists()) {
+        if (!config.exists()) {
             cli.print("Creating config file at " + config.getAbsolutePath());
             config.createNewFile();
             String baseContent = "notes_location=" + System.getProperty("user.home") + "/.notes\n" +
                     "server=https://notes.nwolfhub.org";
-            try(FileOutputStream outputStream = new FileOutputStream(config)) {
+            try (FileOutputStream outputStream = new FileOutputStream(config)) {
                 outputStream.write(baseContent.getBytes(StandardCharsets.UTF_8));
             }
         }
@@ -85,14 +86,14 @@ public class Main {
         frame.setVisible(true);
         cli.print("Reading notes");
         File notesDir = new File(configurator.getValue("notes_location"));
-        if(!notesDir.exists()) {
+        if (!notesDir.exists()) {
             cli.print("Creating notes directory");
             notesDir.mkdirs();
         }
         HashMap<String, Note> notes = new HashMap<>();
-        for(File noteFile: Objects.requireNonNull(notesDir.listFiles())) {
-            if(noteFile.getName().matches(".*\\.note$")) {
-                try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(noteFile))) {
+        for (File noteFile : Objects.requireNonNull(notesDir.listFiles())) {
+            if (noteFile.getName().matches(".*\\.note$")) {
+                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(noteFile))) {
                     Note note = (Note) in.readObject();
                     notes.put(note.getName(), note);
                 } catch (IOException e) {
@@ -103,13 +104,13 @@ public class Main {
             }
         }
         cli.print("Finished reading notes");
-        for(Note note:notes.values()) {
+        for (Note note : notes.values()) {
             JLabel noteLabel = new JLabel(note.getName());
             noteLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if(e.getButton()==MouseEvent.BUTTON1) {
-                        if(edited) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        if (edited) {
 
                             notes.put(prevNote, new Note(prevNote, noteText.getText(), false));
                         } else {
@@ -150,17 +151,17 @@ public class Main {
     }
 
     public void saveNote(String name, String text, boolean online) {
-        if(!online) {
+        if (!online) {
             File noteFile = new File(configurator.getValue("notes_location") + "/" + name + ".note");
-            if(!noteFile.exists()) {
+            if (!noteFile.exists()) {
                 try {
                     noteFile.createNewFile();
-                    try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(noteFile))) {
+                    try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(noteFile))) {
                         outputStream.writeObject(new Note(name, text, false));
                     }
-                    if(edited) {
+                    if (edited) {
                         File prevNoteFile = new File(configurator.getValue("notes_location") + "/" + prevNote + ".note");
-                        if(prevNoteFile.exists()) {
+                        if (prevNoteFile.exists()) {
                             prevNoteFile.delete();
                             cli.print("Removed note with previous name");
                         }
@@ -176,13 +177,13 @@ public class Main {
     }
 
     private void rebuildNotesList(HashMap<String, Note> notes) {
-        for(Note note:notes.values()) {
+        for (Note note : notes.values()) {
             JLabel noteLabel = new JLabel(note.getName());
             noteLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if(e.getButton()==MouseEvent.BUTTON1) {
-                        if(edited) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        if (edited) {
 
                             notes.put(prevNote, new Note(prevNote, noteText.getText(), false));
                         } else {
@@ -201,5 +202,71 @@ public class Main {
             });
             notesList.add(noteLabel);
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
+        $$$setupUI$$$();
+    }
+
+    /**
+     * Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        notesWindow = new JPanel();
+        notesWindow.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        notesWindow.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        notesList = new JList();
+        notesList.setEnabled(true);
+        final DefaultListModel defaultListModel1 = new DefaultListModel();
+        notesList.setModel(defaultListModel1);
+        panel1.add(notesList, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
+        notesWindow.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_SOUTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        content = new JPanel();
+        content.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        notesWindow.add(content, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        noteName = new JTextField();
+        noteName.setEnabled(false);
+        content.add(noteName, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        noteText = new JTextPane();
+        noteText.setEnabled(false);
+        noteText.setText("");
+        content.add(noteText, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 570), null, 0, false));
+        newNote = new JButton();
+        newNote.setText("New note");
+        notesWindow.add(newNote, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        switchWebState = new JButton();
+        switchWebState.setText("Login");
+        notesWindow.add(switchWebState, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        webStatus = new JLabel();
+        webStatus.setText("OFFLINE");
+        notesWindow.add(webStatus, new com.intellij.uiDesigner.core.GridConstraints(0, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
+        return notesWindow;
     }
 }
